@@ -24,8 +24,81 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+        <section data-markdown data-separator="^\n---$" data-separator-vertical="^\n>>>$">
+          <script type="text/template">
+# Haskellで学ぶ関数型プログラミング
+
+---
+
+## 自己紹介
+**藤原 貴明**
+- techno_tanoC(てくのたのしー)
+- 神戸薬科大学4年生 
+- 医療統計学
+- Haskell大好き
+- プログラミングは元々は趣味
+- rubyのアルバイトを2年
+- twitter: @techno_tanoC
+- gmail:   techno.tanoc@gmail.com
+
+>>>
+
+### 医療統計学
+- ベイズ統計学を使った研究
+- MCMC(マルコフ連鎖モンテカルロ法)を使った医療技術の費用効果分析をする(予定)
+  - 効果: QALY = 生存時間 x 生活の質(QOL)
+- 医薬品の費用と効果を医療経済的に評価
+
+ある薬の費用は効果に見合っているか？  
+Aという薬とBという薬のどちらが経済的か？
+
+---
+
+## Haskell(はすける)
+- 純粋関数型言語
+- 静的型付け
+- パターンマッチ
+- 代数的データ型
+- 遅延評価
+- カリー化
+- 型推論
+- 型クラス
+- モナド
+
+etc...
+
+>>>
+
+### 純粋
+副作用を許さない
+
+副作用: 値の再代入や入出力
+
+入出力はIO型を通す  
+
+>>>
+
+代数的データ型による柔軟な型の表現  
+↓  
+NullPointerExceptionや  
+NoMethodErrorが起きないことを保証できる  
+↓  
+バグの少ないプログラム！！！
+
+(HaskellやOCamlのような静的型付けの関数型言語の話)
+
+>>>
+
+そしてそれをサポートする機能
+- パターンマッチ → 代数的データ型
+- do構文(rubyのdoとは無関係) → モナド
+- カリー化 → 部分適用 関数合成
+
+---
+
+
+          </script>
+        </section>
 			</div>
 		</div>
 
