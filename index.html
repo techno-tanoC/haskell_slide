@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+		<title>What's Haskell?</title>
 
 		<link rel="stylesheet" href="css/reveal.css">
 		<link rel="stylesheet" href="css/theme/black.css">
@@ -26,33 +26,11 @@
 			<div class="slides">
         <section data-markdown data-separator="^\n---$" data-separator-vertical="^\n>>>$">
           <script type="text/template">
-# Haskellで学ぶ関数型プログラミング
+# Haskellとは？
 
----
-
-## 自己紹介
-**藤原 貴明**
-- techno_tanoC(てくのたのしー)
-- 神戸薬科大学4年生 
-- 医療統計学
-- Haskell大好き
-- プログラミングは元々は趣味
-- rubyのアルバイトを2年
-- twitter: @techno_tanoC
-- gmail:   techno.tanoc@gmail.com
+以降、病的な処理(部分関数、`_|_`、unsafePerformIOなど)は考えないとします
 
 >>>
-
-### 医療統計学
-- ベイズ統計学を使った研究
-- MCMC(マルコフ連鎖モンテカルロ法)を使った医療技術の費用効果分析をする(予定)
-  - 効果: QALY = 生存時間 x 生活の質(QOL)
-- 医薬品の費用と効果を医療経済的に評価
-
-ある薬の費用は効果に見合っているか？  
-Aという薬とBという薬のどちらが経済的か？
-
----
 
 ## Haskell(はすける)
 - 純粋関数型言語
@@ -75,16 +53,14 @@ etc...
 副作用:
 - グローバル変数
 - 値の再代入
-- 入出力全般
+- 入出力
 
-入出力はIO型を通す = 純粋な世界では基本的に例外が起きない
+haskellでは型によって抽象化、エミュレートすることで模倣的に実現する
 
 >>>
 
-代数的データ型による柔軟な型の表現  
-↓  
 NullPointerExceptionや  
-NoMethodErrorが起きないことを保証できる  
+例外が起きないことを型で保証できる  
 ↓  
 バグの少ないプログラム！！！
 
@@ -94,7 +70,7 @@ NoMethodErrorが起きないことを保証できる
 
 そしてそれをサポートする機能
 - パターンマッチ → 代数的データ型
-- do構文(rubyのdoとは無関係) → モナド
+- do構文(ruby, elixirのdoとは無関係) → モナド
 - カリー化 → 部分適用 関数合成
 
 関数型プログラミングをサポートする機能が多い
@@ -103,42 +79,198 @@ NoMethodErrorが起きないことを保証できる
 
 ---
 
-## まず関数型プログラミングってなに？
+Haskellの力の秘密
 
-1. 明確な定義が存在せず、個々人によって定義は大きくことになるため、ここではできるだけコンセンサスの取れているものだけを選んで紹介します
-2. Haskellでは型理論に基づく代数的データ型や圏論由来のモナドをモリモリ使うことで多大な恩恵を得ています
-
->>>
-
-構造化プログラミングが_順次_、_反復_、_分岐_をベースにしているのに対し、  
-関数型プログラミングは_ラムダ計算_(λ計算)をベースにしている。
-
-どちらもチューリング完全
+# 代数的データ型
 
 >>>
 
-処理を関数として抽象化、それを組み合わせて書く
+## 代数的データ型
 
-オブジェクト指向ではクラス単位  
-↕  
-関数型では関数単位
+簡単に言うと直和型と直積型と関数の組み合わせ
 
-疎結合で再利用性が高く、組み合わせることが容易
+- 直和型: CやJava,C#のenumみたいなの
+- 直積型: 構造体みたいなの
 
 >>>
 
-> 問題を解くための部品プログラムを書くとき、その問題を部分問題に分割し、部分問題を解き、その解を合成する。元の問題を分割する方法は、部分解を貼り合せる方法に直接依存する  
-> from [なぜ関数プログラミングは重要か](http://www.sampou.org/haskell/article/whyfp.html)
+## 直和型
 
-↓
+~~~hs
+data Bool = True | False
+~~~
 
-- ファーストクラスな関数
-- 高階関数
-- 関数合成
-- (モナド)
+>>>
+
+## 直積型
+
+~~~hs
+data Color = Color Int Int Int
+~~~
+
+>>>
+
+Haskellの場合再帰的な型もOK
+
+~~~hs
+data List a = Null | Cons a (List a)
+~~~
+
+>>>
+
+## Maybe
+
+失敗するかもしれない値を表す(≒nullかもしれない値)
+
+~~~hs
+data Maybe a = Nothing | Just a
+~~~
+
+>>>
+
+## Either
+
+成功した時の値か失敗した時の値
+
+~~~hs
+data Either a b = Left a | Right b
+~~~
+
+>>>
+
+## State
+
+再代入可能な値を保持した計算
+
+~~~hs
+data State s a = State (s -> (s, a))
+~~~
+
+>>>
+
+## IO
+
+入出力に関わる処理、値
+
+実装は`RealWorld`を状態とするST(Stateみたいなの)
 
 ---
 
+# できることしかできない
+
+(内容が感覚的で抽象的なので時間がなければスキップ)
+
+>>>
+
+## おまえは今まで見たNullPointerExceptionの数を覚えているのか？
+
+![パン](./pan.jpg)
+
+>>>
+
+## C＃
+
+~~~cs
+int Double(int x) {
+    ??????????
+}
+~~~
+
+プログラマ「二倍にするだけのメソッドかな？」
+
+>>>
+
+## C＃
+
+~~~cs
+int Double(int x) {
+    string str = x.ToString();
+    Console.WriteLine(str);
+    globalSum += x;
+    if (x == 0)
+    {
+        throw new ArgumentException("arg is zero!");
+    }
+    else
+    {
+        return x * 2;
+    }
+}
+~~~
+
+(　ﾟДﾟ )  
+(　ﾟДﾟ　)  
+
+確かに二倍にはしてるけど・・・  
+
+>>>
+
+## Haskell
+
+~~~hs
+double :: Int -> Int
+double x = ?????????
+~~~
+
+>>>
+
+## Haskell
+
+~~~hs
+double :: Int -> Int
+double x = x * 2
+~~~
+
+（　･´ｰ･｀）どや？
+
+>>>
+
+## Haskell
+
+- 引数のIntに関わる処理しか行えない！
+  - ~~グローバル変数へのアクセス~~
+  - ~~入出力~~
+  - ~~例外~~
+  - ~~ぬるぽ~~ ガッ
+
+※ IntはShowのインスタンスになっているので文字列化することはできる  
+文字列化して何らかの形でIntにして返すことは一応可能(C#でも同じことだけど)
+
+>>>
+
+# 型によってできることが制限できる
+
+明示的  
+
+必要なことは型で意味を与えることで明示的に使う  
+しかもOOPLより柔軟
+
+>>>
+
+## さっきのC＃と同じことをしたい時は？
+
+~~~hs
+double :: Int -> StateT Int (ExceptT String IO) Int
+double x = do
+  let str = show x
+  lift . lift $ putStrLn str
+  modify (+ x)
+  if x == 0
+  then lift . throwE $ "arg is zero!"
+  else lift . return $ x * 2
+~~~
+
+---
+
+# パターンマッチ
+
+条件分岐とデコンストラクション
+
+>>>
+
+## ハンズオン
+
+トランプを代数的データ型で表して色々使ってみる
           </script>
         </section>
 			</div>
